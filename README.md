@@ -1,2 +1,2 @@
 # cypress-tests-3
-[PDP-2221] Repositorio para Test de Cypress con POM + Cucumber
+Repositorio para test de Cypress implementando Page Object Model (POM) y Cucumber, el cual forma parte de mi formación de QA en la empresa Qualisophy.
