@@ -1,43 +1,34 @@
 Feature: Test con POM + Cucumber de la Web TodoMVC
 
-    Scenario: Comprobar que se puede crear una tarea
+    Background:
         Given que estoy en la página de inicio
+
+    Scenario: Crear una tarea
         When creo una tarea llamada "Tarea 1"
         Then debería verse "Tarea 1" en la lista
 
-    Scenario: Comprobar que se puede marcar una tarea como completada
-        Given que estoy en la página de inicio
-        And creo una tarea llamada "Tarea 1"
-        And la tarea se muestra como activa
+    Scenario: Marcar una tarea como completada
+        Given existe una tarea activa llamada "Tarea 1"
         When marco la tarea "Tarea 1" como completada
         Then la tarea "Tarea 1" debería mostrarse como completada
     
-    Scenario: Comprobar que se puede desmarcar una tarea como completada
-        Given que estoy en la página de inicio
-        And creo una tarea llamada "Tarea 1"
-        And la tarea se muestra como activa
-        And marco la tarea "Tarea 1" como completada
-        And la tarea "Tarea 1" debería mostrarse como completada
+    Scenario: Desmarcar una tarea como completada
+        Given existe una tarea completada llamada "Tarea 1"
         When desmarco la tarea "Tarea 1" como completada
         Then la tarea "Tarea 1" debería mostrarse como activa
 
-    Scenario: Comprobar que se puede editar una tarea existente
-        Given que estoy en la página de inicio
-        And creo una tarea llamada "Tarea 1"
-        And la tarea se muestra como activa
+    Scenario: Editar una tarea existente
+        Given existe una tarea activa llamada "Tarea 1"
         When cambio el nombre de la tarea "Tarea 1" por "La tarea ha sido modificada"
         Then debería verse "La tarea ha sido modificada" en la lista
 
-    Scenario: Comprobar que se puede borrar una tarea existente
-        Given que estoy en la página de inicio
-        And creo una tarea llamada "Tarea 1"
-        And la tarea se muestra como activa
+    Scenario: Borrar una tarea existente
+        Given existe una tarea activa llamada "Tarea 1"
         When borro la tarea "Tarea 1"
         Then la tarea "Tarea 1" no debería existir
 
-    Scenario: Comprobar que funcionan correctamente los filtros
-        Given que estoy en la página de inicio
-        And creo una tarea llamada "Tarea 1"
+    Scenario: Filtrar tareas por estado
+        When creo una tarea llamada "Tarea 1"
         And la tarea "Tarea 1" se muestra como activa
         And creo una tarea llamada "Tarea 2"
         And la tarea "Tarea 2" se muestra como activa
@@ -47,9 +38,9 @@ Feature: Test con POM + Cucumber de la Web TodoMVC
         And la tarea "Tarea 4" se muestra como activa
         And marco la tarea "Tarea 1" como completada
         And marco la tarea "Tarea 2" como completada
-        When hago clic en el filtro "Completed" (completadas)
-        Then deberían mostrarse solo las tareas "Tarea 1" y "Tarea 2"
-        When hago clic en el filtro "Active" (activas)
-        Then deberían mostrarse solo las tareas "Tarea 3" y "Tarea 4"
-        When hago clic en el filtro "All" (todas)
-        then deberían mostrarse las 4 tareas creadas, cada una con su estado
+        When hago clic en el filtro "Completed"
+        Then deberían mostrarse solo las tareas completadas "Tarea 1" y "Tarea 2"
+        When hago clic en el filtro "Active"
+        Then deberían mostrarse solo las tareas activas "Tarea 3" y "Tarea 4"
+        When hago clic en el filtro "All"
+        Then deberían mostrarse las 4 tareas creadas, cada una con su estado

@@ -19,62 +19,47 @@ export class Tareas {
 
     crear(nombre) {
         cy.get(this.crearTarea).type(nombre + '{enter}');
-        cy.get(this.nombreTarea).eq(0).should('contain', nombre);
     }
 
-    crearMultiple(nombre, id) {
-        cy.get(this.crearTarea).type(nombre + '{enter}');
-        cy.get(this.nombreTarea).eq(id).should('contain', nombre);
+    marcar(index) {    
+        cy.get(this.checkTarea).eq(index-1).click();
     }
 
-    completar() {
-        this.crear('Tarea 1');
-        cy.get(this.indiceTarea).eq(0).should('not.have.class', 'completed');
-        cy.get(this.checkTarea).eq(0).click();
-        cy.get(this.indiceTarea).eq(0).should('have.class', 'completed');
-    }
-
-    descompletar() {
-        this.completar();
-        cy.get(this.checkTarea).eq(0).click();
-        cy.get(this.indiceTarea).eq(0).should('not.have.class', 'completed');
-    }
-
-    editar() {
-        this.crear('Tarea 1');
-        cy.get(this.indiceTarea).eq(0).dblclick();
-        cy.get(this.indiceTarea).eq(0).find(this.editarTarea).type('La tarea ha sido modificada{enter}');
-        cy.get(this.nombreTarea).eq(0).should('contain', 'La tarea ha sido modificada');
+    editar(nuevoNombre, index) {
+        cy.get(this.indiceTarea).eq(index-1).dblclick();
+        cy.get(this.indiceTarea).eq(index-1).find(this.editarTarea).type(nuevoNombre + '{enter}');
     }
 
     borrar() {
-        this.crear('Tarea 1');
         cy.get(this.eliminarTarea).click({ force: true });
-        cy.get(this.nombreTarea).should('not.exist');
     }
 
-    filtrar() {
-        this.crearMultiple('Tarea 1', 0);
-        this.crearMultiple('Tarea 2', 1);
-        this.crearMultiple('Tarea 3', 2);
-        this.crearMultiple('Tarea 4', 3);
-        cy.get(this.checkTarea).eq(0).click();
-        cy.get(this.checkTarea).eq(1).click();
-        cy.get(this.filtroCompletadas).click();
-        cy.get(this.nombreTarea).eq(0).should('contain', 'Tarea 1');
-        cy.get(this.nombreTarea).eq(1).should('contain', 'Tarea 2');
-        cy.get(this.indiceTarea).eq(0).should('have.class', 'completed');
-        cy.get(this.indiceTarea).eq(1).should('have.class', 'completed');
-        cy.get(this.indiceTarea).eq(2).should('not.exist');
-        cy.get(this.indiceTarea).eq(3).should('not.exist');
+    filtrarActivas() {
         cy.get(this.filtroActivas).click();
-        cy.get(this.nombreTarea).eq(0).should('contain', 'Tarea 3');
-        cy.get(this.nombreTarea).eq(1).should('contain', 'Tarea 4');
-        cy.get(this.indiceTarea).eq(0).should('not.have.class', 'completed');
-        cy.get(this.indiceTarea).eq(1).should('not.have.class', 'completed');
-        cy.get(this.indiceTarea).eq(2).should('not.exist');
-        cy.get(this.indiceTarea).eq(3).should('not.exist');
+    }
+
+    filtrarCompletadas() {
+        cy.get(this.filtroCompletadas).click();
+    }
+
+    filtrarTodas() {
         cy.get(this.filtroTodas).click();
+    }
+
+    esNombre(nombre, index) {
+        cy.get(this.nombreTarea).eq(index-1).should('contain', nombre);
+    }
+
+    esActiva(index) {
+        cy.get(this.indiceTarea).eq(index-1).should('not.have.class', 'completed');
+    }
+
+    esCompletada(index) {
+        cy.get(this.indiceTarea).eq(index-1).should('have.class', 'completed');
+    }
+
+    esInexistente(index) {
+        cy.get(this.nombreTarea).should('not.exist');
     }
 
 }
