@@ -28,16 +28,11 @@ Feature: Test con POM + Cucumber de la Web TodoMVC
         Then la tarea "Tarea 1" no debería existir
 
     Scenario: Filtrar tareas por estado
-        When creo una tarea llamada "Tarea 1"
-        And la tarea "Tarea 1" se muestra como activa
-        And creo una tarea llamada "Tarea 2"
-        And la tarea "Tarea 2" se muestra como activa
-        And creo una tarea llamada "Tarea 3"
-        And la tarea "Tarea 3" se muestra como activa
-        And creo una tarea llamada "Tarea 4"
-        And la tarea "Tarea 4" se muestra como activa
-        And marco la tarea "Tarea 1" como completada
-        And marco la tarea "Tarea 2" como completada
+        Given existe una tarea activa llamada "Tarea 1"
+        And existe una tarea activa llamada "Tarea 2"
+        And existe una tarea activa llamada "Tarea 3"
+        And existe una tarea activa llamada "Tarea 4"
+        And marco las tareas "Tarea 1" y "Tarea 2" como completadas
         When hago clic en el filtro "Completed"
         Then deberían mostrarse solo las tareas completadas "Tarea 1" y "Tarea 2"
         When hago clic en el filtro "Active"

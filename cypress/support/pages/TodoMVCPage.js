@@ -3,14 +3,10 @@ export class Tareas {
     constructor() {
         this.web = 'https://www.todomvc.com/examples/react/dist/';
         this.nombreTarea = '[data-testid="todo-item-label"]';
-        this.indiceTarea = '.todo-list li';
         this.crearTarea = '.new-todo';
         this.editarTarea = '[data-testid="text-input"]';
-        this.eliminarTarea = ':nth-child(1) > .view > .destroy';
         this.checkTarea = '[data-testid="todo-item-toggle"]';
-        this.filtroTodas = '[data-testid="footer-navigation"] a:contains("All")';
-        this.filtroActivas = '[data-testid="footer-navigation"] a:contains("Active")';
-        this.filtroCompletadas = '[data-testid="footer-navigation"] a:contains("Completed")';
+        this.contenedorFiltros = '[data-testid="footer-navigation"]';
     }
 
     abrirWeb() {
@@ -18,48 +14,62 @@ export class Tareas {
     }
 
     crear(nombre) {
-        cy.get(this.crearTarea).type(nombre + '{enter}');
+        cy.get(this.crearTarea)
+          .type(nombre + '{enter}');
     }
 
-    marcar(index) {    
-        cy.get(this.checkTarea).eq(index-1).click();
+    marcar(nombre) {
+        cy.contains(this.nombreTarea, nombre)
+          .parents('li')
+          .find(this.checkTarea)
+          .click();
     }
 
-    editar(nuevoNombre, index) {
-        cy.get(this.indiceTarea).eq(index-1).dblclick();
-        cy.get(this.indiceTarea).eq(index-1).find(this.editarTarea).type(nuevoNombre + '{enter}');
+    editar(nombreAntiguo, nombreNuevo) {
+        cy.contains(this.nombreTarea, nombreAntiguo)
+          .dblclick({ force: true });
+
+        cy.get(this.editarTarea)
+          .filter((index, el) => el.value === nombreAntiguo) 
+          .clear()
+          .type(nombreNuevo + '{enter}');
     }
 
-    borrar() {
-        cy.get(this.eliminarTarea).click({ force: true });
+    borrar(nombre) {
+        cy.contains(this.nombreTarea, nombre)
+          .parents('li')
+          .find('.destroy')
+          .click({ force: true });
     }
 
-    filtrarActivas() {
-        cy.get(this.filtroActivas).click();
+    filtrar(filtro) {
+        cy.get(this.contenedorFiltros)
+          .contains('a', filtro)
+          .click();
     }
 
-    filtrarCompletadas() {
-        cy.get(this.filtroCompletadas).click();
+    esNombre(nombre) {
+        cy.contains(this.nombreTarea, nombre)
+          .should('be.visible');
     }
 
-    filtrarTodas() {
-        cy.get(this.filtroTodas).click();
+    esActiva(nombre) {
+        cy.contains(this.nombreTarea, nombre)
+          .should('be.visible')
+          .parents('li')
+          .should('not.have.class', 'completed');
     }
 
-    esNombre(nombre, index) {
-        cy.get(this.nombreTarea).eq(index-1).should('contain', nombre);
+    esCompletada(nombre) {
+        cy.contains(this.nombreTarea, nombre)
+          .should('be.visible')
+          .parents('li')
+          .should('have.class', 'completed');
     }
 
-    esActiva(index) {
-        cy.get(this.indiceTarea).eq(index-1).should('not.have.class', 'completed');
-    }
-
-    esCompletada(index) {
-        cy.get(this.indiceTarea).eq(index-1).should('have.class', 'completed');
-    }
-
-    esInexistente(index) {
-        cy.get(this.nombreTarea).should('not.exist');
+    esInexistente(nombre) {
+        cy.contains(this.nombreTarea, nombre)
+          .should('not.exist');
     }
 
 }
